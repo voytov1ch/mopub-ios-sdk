@@ -201,9 +201,7 @@ const CGFloat MPNativeViewDynamicDimension = -1.0;
 
 - (BOOL)hasIconView
 {
-    return [self.adapter respondsToSelector:@selector(iconMediaView)]
-        && [self.adapter iconMediaView]
-        && [self.adView respondsToSelector:@selector(nativeIconImageView)];
+    return [self.adView respondsToSelector:@selector(nativeIconImageView)];
 }
 
 - (void)onPrivacyIconTapped
