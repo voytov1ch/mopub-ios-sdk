@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
     spec.author = { 'Igor Voytovich' => 'igor.voytovich@gen.tech' }
     spec.social_media_url = ''
     spec.source = { :git => 'https://github.com/voytov1ch/mopub-ios-sdk.git', :tag => "#{spec.version}" }
-    spec.source_files = 'MoPubSDK/*.{h,m}'
+    spec.source_files = 'MoPubSDK/*.{h,m}', 'MoPubSDK/**/*.{h,m}'
     spec.ios.deployment_target = '8.0'
     spec.requires_arc = true
 end
