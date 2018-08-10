@@ -159,14 +159,15 @@ const CGFloat MPNativeViewDynamicDimension = -1.0;
     }
 
     if ([self hasIconView]) {
-        UIView *iconView = [self.adapter iconMediaView];
+      
+//        UIView *iconView = [self.adapter iconMediaView];
         UIView *iconImageView = [self.adView nativeIconImageView];
 
-        iconView.frame = iconImageView.bounds;
-        iconView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+//        iconView.frame = iconImageView.bounds;
+//        iconView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         iconImageView.userInteractionEnabled = YES;
 
-        [iconImageView addSubview:iconView];
+//        [iconImageView addSubview:iconView];
     }
 
     if ([self shouldLoadMediaView]) {
@@ -202,6 +203,9 @@ const CGFloat MPNativeViewDynamicDimension = -1.0;
 - (BOOL)hasIconView
 {
     return [self.adView respondsToSelector:@selector(nativeIconImageView)];
+//  return [self.adapter respondsToSelector:@selector(iconMediaView)]
+//  && [self.adapter iconMediaView]
+//  && [self.adView respondsToSelector:@selector(nativeIconImageView)];
 }
 
 - (void)onPrivacyIconTapped
