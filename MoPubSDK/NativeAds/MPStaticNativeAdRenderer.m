@@ -159,15 +159,32 @@ const CGFloat MPNativeViewDynamicDimension = -1.0;
     }
 
     if ([self hasIconView]) {
-      
-//        UIView *iconView = [self.adapter iconMediaView];
-        UIView *iconImageView = [self.adView nativeIconImageView];
+        NSString *iconImageUrl = [self.adapter.properties objectForKey:kAdIconImageKey];
+        NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:iconImageUrl]];
+        self.adView.nativeIconImageView.image = [UIImage imageWithData:imageData];
 
-//        iconView.frame = iconImageView.bounds;
-//        iconView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        iconImageView.userInteractionEnabled = YES;
-
-//        [iconImageView addSubview:iconView];
+        // No cached privacy information icon image was cached, but there is a URL for the
+        // icon. Go fetch the icon and populate the UIImageView when complete.
+        if (iconImageUrl != nil) {
+            NSURL *iconUrl = [NSURL URLWithString:iconImageUrl];
+            [self.rendererImageHandler loadImageForURL:iconUrl
+                                         intoImageView:self.adView.nativeIconImageView];
+        }
+        // The ad network may provide its own view for its privacy information icon.
+        // We assume the ad handles the tap on the icon as well.
+        else if ([adapter respondsToSelector:@selector(iconMediaView)]) {
+            UIView *nativeIconView = [adapter iconMediaView];
+            nativeIconView.frame = self.adView.nativePrivacyInformationIconImageView.bounds;
+            nativeIconView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+            self.adView.nativeIconImageView.userInteractionEnabled = YES;
+            [self.adView.nativeIconImageView addSubview:nativeIconView];
+            self.adView.nativeIconImageView.hidden = NO;
+        }
+        // No privacy icon
+        else {
+            self.adView.nativePrivacyInformationIconImageView.userInteractionEnabled = NO;
+            self.adView.nativePrivacyInformationIconImageView.hidden = YES;
+        }
     }
 
     if ([self shouldLoadMediaView]) {
@@ -203,9 +220,6 @@ const CGFloat MPNativeViewDynamicDimension = -1.0;
 - (BOOL)hasIconView
 {
     return [self.adView respondsToSelector:@selector(nativeIconImageView)];
-//  return [self.adapter respondsToSelector:@selector(iconMediaView)]
-//  && [self.adapter iconMediaView]
-//  && [self.adView respondsToSelector:@selector(nativeIconImageView)];
 }
 
 - (void)onPrivacyIconTapped
